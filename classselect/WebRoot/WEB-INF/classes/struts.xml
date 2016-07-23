@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+<constant name="struts.i18n.encoding" value="UTF-8" />
+ <package name="struts2" extends="struts-default"  namespace="/">
+
+  <action name="login" class="com.wuyibin.action.LoginAction" >
+   <result name="input">/login.jsp</result>
+   <result name="studentlogin">/front/userhome.jsp</result>
+   <result name="adminlogin">/behind/adminhome.jsp</result>
+   <result name="error">/error.jsp</result>
+  </action>
+  <action name="register" class="com.wuyibin.action.RegisterAction" >    	
+  		<result name="success">/behind/ok.jsp</result>
+  		<result name="input">/behind/addstudent.jsp</result>
+  </action>
+  <action name="listcourse" class="com.wuyibin.action.CourseAction">
+  	<result name="success">/front/selectcourses.jsp</result>
+  </action>
+ <action name="addcourse" class="com.wuyibin.action.CourseAction" method="addcourse">
+ 	<result name="success">behind/ok.jsp</result>
+ </action>
+ <action name="StudentAction1" class="com.wuyibin.action.StudentAction"  method="selectcourse">
+ 	<result>/ok.jsp</result>
+ 	<result name ="courseexist">/courseexist.jsp</result>
+ </action>
+  <action name="StudentAction2" class="com.wuyibin.action.StudentAction"  method="deletecourse">
+ 	<result name="success">/ok.jsp</result>
+ 	</action>
+ 	<action name="StudentAction3" class="com.wuyibin.action.StudentAction"  method="selectedcou">
+ 	<result name="success">/front/selectedcou.jsp</result>
+ 	</action>
+ 	 	<action name="StudentAction4" class="com.wuyibin.action.StudentAction"  method="logout">
+ 	<result name="success">/login.jsp</result>
+ 	</action>
+ 	<action name="CourseAction" class="com.wuyibin.action.CourseAction">
+ 	<result name="single">/behind/updatecourse.jsp</result>
+ 	</action>
+ 	 <action name="AdminAction" class="com.wuyibin.action.AdminAction" >
+ 	<result name="input">/adminlogin.jsp</result>
+ 	<result name="success">/behind/adminhome.jsp</result>
+ 	<result name ="deletedone">/behind/ok.jsp</result>
+ 	<result name="listall">/behind/listallcourse.jsp</result>
+ 	<result name="deletestu">/behind/ok.jsp</result>
+ 	<result name ="allstudents">/behind/allstudents.jsp</result>
+ 	<result name ="logout">/login.jsp</result>
+ 	<result name="update">/behind/ok.jsp</result>
+ 	<result name="searchdone">/behind/listallcourse.jsp</result>
+ 	</action>
+ 
+  </package>
+
+</struts>
