@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx		
+	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd  	
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd ">
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/selectcoursedb">
+		</property>
+		<property name="username" value="root"></property>
+		<property name="password" value="0000"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		 <property name="mappingResources">
+         <list>
+              <value>com/wuyibin/shop/model/Admin.hbm.xml</value>
+              <value>com/wuyibin/shop/model/Course.hbm.xml</value>
+              <value>com/wuyibin/shop/model/Student.hbm.xml</value>      
+             <!-- 
+              <value>com/wuyibin/shop/model/Stucourse.hbm.xml</value>      
+         	 -->
+         </list>
+    </property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="show_sql">true</prop>
+				<prop key="hbm2ddl.auto">update</prop>
+			</props>
+					
+				
+			
+		</property>
+		
+	</bean>
+	
+	<!-- 配置事物管理 -->
+           <bean id="transationManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+           		<property name="sessionFactory">
+           			<ref bean="sessionFactory"/>
+           		</property>
+           </bean>
+         
+         <!-- 配置事务属性，配置add,delete,updata开始的方法，事务传播属性为required -->
+			<tx:advice id="txAdvice" transaction-manager="transationManager">
+			  <tx:attributes>
+			   <tx:method name="add*" propagation="REQUIRED"/>
+			   <tx:method name="delete*" propagation="REQUIRED"/>
+			   <tx:method name="update*" propagation="REQUIRED"/>
+			   
+			   <tx:method name="*" read-only="true"/>
+			  </tx:attributes>
+			</tx:advice>
+
+   <!-- 配置哪些地方使用事务 -->
+		<aop:config>
+			 <aop:pointcut id="allManagerMethod" 	 expression="execution(* com.wuyibin.shop.service.*.*(..))"/>
+			 <aop:advisor advice-ref="txAdvice"  pointcut-ref="allManagerMethod"/>
+		</aop:config>
+	
+	<!-- DAO层 -->
+	<bean id="admindao" class="com.wuyibin.shop.dao.impl.AdminDAOimpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+		<bean id="studentdao" class="com.wuyibin.shop.dao.impl.StudentDaoimpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+		<bean id="coursedao" class="com.wuyibin.shop.dao.impl.CourseDAOimpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	<!-- service层 -->
+	<bean id="adminservice" class="com.wuyibin.shop.service.impl.AdminServiceimpl">
+		<property name="admindao">
+			<ref bean="admindao"/>
+		</property>
+		<property name="coursedao">
+			<ref bean="coursedao"/>
+		</property>
+	</bean>
+	<bean id="studentservice" class="com.wuyibin.shop.service.impl.StudentServiceimpl">
+		<property name="studentdao">
+			<ref bean="studentdao"/>
+		</property>
+	</bean>
+	<bean id="courseservice" class="com.wuyibin.shop.service.impl.CourseServiceimpl">
+		<property name="coursedao">
+			<ref bean="coursedao"/>
+		</property>
+	</bean>
+	<!-- action层 -->
+		
+	<bean id="loginaction" class="com.wuyibin.shop.action.LoginAction">
+		<property name="studentservice">
+			<ref bean="studentservice"/>
+		</property>
+		<property name="adminservice">
+			<ref bean="adminservice"/>
+		</property>
+	</bean>
+	<bean id="adminaction" class="com.wuyibin.shop.action.AdminAction">
+		<property name="studentservice">
+			<ref bean="studentservice"/>
+		</property>
+		<property name="adminservice">
+			<ref bean="adminservice"/>
+		</property>
+		<property name="courseservice">
+			<ref bean="courseservice"/>
+		</property>	
+	</bean>
+	<bean id="studentaction" class="com.wuyibin.shop.action.StudentAction">
+		<property name="studentservice">
+			<ref bean="studentservice"/>
+		</property>
+		<property name="adminservice">
+			<ref bean="adminservice"/>
+		</property>
+		<property name="courseservice">
+			<ref bean="courseservice"/>
+		</property>	
+	</bean>
+	<bean id="courseaction" class="com.wuyibin.shop.action.CourseAction">
+			<property name="courseservice">
+			<ref bean="courseservice"/>
+		</property>	
+		</bean>
+	
+	
+	
+	</beans>
