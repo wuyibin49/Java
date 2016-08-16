@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx		
+	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd  	
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd ">
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/selectcoursedb">
+		</property>
+		<property name="username" value="root"></property>
+		<property name="password" value="0000"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/wuyibin/shop/model/Orders.hbm.xml</value>
+				<value>com/wuyibin/shop/model/Goods.hbm.xml</value>
+				<value>com/wuyibin/shop/model/User.hbm.xml</value>
+			</list>
+			
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+			</props>
+		</property>
+	</bean>
+	
+		<!-- 配置事物管理 -->
+           <bean id="transationManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+           		<property name="sessionFactory">
+           			<ref bean="sessionFactory"/>
+           		</property>
+           </bean>
+         
+         <!-- 配置事务属性，配置add,delete,updata开始的方法，事务传播属性为required -->
+			<tx:advice id="txAdvice" transaction-manager="transationManager">
+			  <tx:attributes>
+			   <tx:method name="add*" propagation="REQUIRED"/>
+			   <tx:method name="delete*" propagation="REQUIRED"/>
+			   <tx:method name="update*" propagation="REQUIRED"/>
+			   <tx:method name="register*" propagation="REQUIRED"/>	
+			   <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+			  </tx:attributes>
+			</tx:advice>
+
+   <!-- 配置哪些地方使用事务 -->
+		<aop:config>
+			 <aop:pointcut id="allManagerMethod" 	 expression="execution(* com.wuyibin.shop.service.*.*(..))"/>
+			 <aop:advisor advice-ref="txAdvice"  pointcut-ref="allManagerMethod"/>
+		</aop:config>
+	
+	<!-- dao层 -->
+	<bean id="userdao" class="com.wuyibin.shop.dao.impl.UserDAOimpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>		
+	</bean>
+	<bean id="goodsdao" class="com.wuyibin.shop.dao.impl.GoodsDAOimpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="orderdao" class="com.wuyibin.shop.dao.impl.OrderDAOimpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- service层 -->
+	<bean id="userservice" class="com.wuyibin.shop.service.impl.UserServiceimpl">
+		<property name="userdao" ref="userdao"></property>
+	</bean>
+	<bean id="goodservice" class="com.wuyibin.shop.service.impl.GoodServceimpl">
+		<property name="gooddao" ref="goodsdao"></property>
+	</bean>
+	<bean id="orderservice" class="com.wuyibin.shop.service.impl.OrderServiceimpl">
+		<property name="orderdao" ref="orderdao"></property>
+	</bean>
+	
+	<!-- action层 -->
+	<bean id="useraction" class="com.wuyibin.shop.action.UserAction">
+		<property name="userservice" ref="userservice"></property>
+	</bean>
+	<bean id="goodaction" class="com.wuyibin.shop.action.GoodAction">
+		<property name="goodservice" ref="goodservice"></property>
+	</bean>
+	<bean id="orderaction" class="com.wuyibin.shop.action.OrderAction">
+		<property name="orderservice" ref="orderservice"></property>
+	</bean>
+	<bean id="shoppingcaraction" class="com.wuyibin.shop.action.ShoppingCarAction">
+		<property name="orderservice" ref="orderservice"></property>
+	</bean>
+	</beans>

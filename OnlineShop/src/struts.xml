@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<constant name="struts.objectFactory" value="spring"/>
+
+<package name="struts2" extends="struts-default"  namespace="/">
+	<interceptors>
+		<interceptor name="LoginInter" class="com.wuyibin.shop.interceptor.LoginInter"></interceptor>
+	</interceptors>
+	<global-results> 
+		<result name="login">/account.jsp</result>
+	</global-results>
+	<action name="UserAction" class="useraction">
+		<result name="success">/ok.jsp</result>
+		<result name="login">/index.jsp</result>
+		<result name="loginfailed">/loginfailed.jsp</result>
+	</action>
+	<action name="OrderAction"  class="orderaction">
+		<result name="addorder">/ok.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
+	
+	<action name="GoodAction" class="goodaction">
+		<result name="gooddetail">/product.jsp</result>
+		<!--<result name="addgood">/ok.jsp</result>  -->
+		<result name="deletegood">/cart.jsp</result>
+		<result name="searchgood">/category.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
+	<action name="GoodAction1" class="goodaction">
+		<result name="gooddetail">/product.jsp</result>
+		<result name="addgood">/ok.jsp</result>
+		<result name="deletegood">/cart.jsp</result>
+		<result name="searchgood">/category.jsp</result>
+
+	</action>
+	
+	<action name="ShoppingCarAction" class="shoppingcaraction">
+		<result name="getgoods">/cart.jsp</result>
+		<result name="updategood">/cart.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
+</package>
+</struts>    
