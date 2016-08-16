@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>div+css实现frameset效果</title>
+<style type="text/css">
+@import "one.css"
+</style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="header">
+            <div id="title">
+                <h1>学生选课管理系统</h1>
+            </div>
+        </div>
+        <div class="MainContainer">
+            <div class="sidebar">
+             	<div class="coursemanager">
+             		<div >课程管理</div>             	
+             		<a href="AdminAction!listcourse">所有课程</a><br>             	
+             		<a href ="behind/addcourse.jsp">新增课程</a>  <br>               		
+             	</div>
+             	<div class="studentmanager">
+					<div>学生管理</div>
+					<a href ="AdminAction!allstudents">所有学生</a><br>  
+					<a href="behind/addstudent.jsp">新增学生</a><br>    
+					
+				</div>
+
+            </div>
+            <div  id="main" class="main">
+                内容
+            </div>           
+        </div>
+    </div>
+       
+</body>
+</html>
