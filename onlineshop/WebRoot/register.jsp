@@ -21,14 +21,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-<form action="register" method="post">
-  用户名：<input type="text" name ="name"><br>
-  学号：<input type="text" name="snumber"><br>
-  密码：<input type = "password" name ="password"><br>
-  年龄：<input type="text" name ="age"><br>
-  出生日期：<input type="text" name = "birthday"><br>
-  <input type="submit"  value = "register"><br>
-</form>
-  
+    <form id="registerform" action="UserAction!register" method="post">
+    	帐号：<input type="text" name="user.account"><br>
+    	密码：<input type="password" name="user.password"><br>
+    	电子邮箱：<input type="text" name="user.email"><br>
+    	头像：<input type="file" name=""><br>
+    	<input type="submit" value="提交">
+    	
+    </form>
   </body>
 </html>

@@ -3,40 +3,45 @@
 <struts>
 <constant name="struts.objectFactory" value="spring"/>
 
-	<package name="struts2" extends="struts-default" namespace="/">
-		
-		<action name="Login" class="loginaction">
-			 <result name="input">/login.jsp</result>
-			 <result name="studentlogin">/front/userhome.jsp</result>
-	  		 <result name="adminlogin">/behind/adminhome.jsp</result>
-	  		 <result name="error">/error.jsp</result>
-		</action>
-		
-		<action name="AdminAction" class="adminaction">
-			<result name="input">/adminlogin.jsp</result>
-		 	<result name="success">/behind/adminhome.jsp</result>
-		 	<result name ="deletedone">/behind/ok.jsp</result>
-		 	<result name="listall">/behind/listallcourse.jsp</result>
-		 	<result name="deletestu">/behind/ok.jsp</result>
-		 	<result name ="allstudents">/behind/allstudents.jsp</result>
-		 	<result name ="logout">/login.jsp</result>
-		 	<result name="update">/behind/ok.jsp</result>
-		 	<result name="searchdone">/behind/listallcourse.jsp</result>
-		 	<result name="addsuccess">/behind/ok.jsp</result>
-		</action>
-		<action name="StudentAction" class="studentaction">
-			<result name="selectsuccess">/behind/ok.jsp</result>
-		 	<result name="selectedcou">/front/selectedcou.jsp</result>
-		 	<result name ="courseexist">/courseexist.jsp</result>
-		 	<result name="success">/login.jsp</result>
-		 	<result name="delcourse">/behind/ok.jsp</result>
-		</action>
-		<action name="CourseAction" class="courseaction">
-			<result name="single">/behind/updatecourse.jsp</result>
-			<result name="allcourses">/front/selectcourses.jsp</result>
-			<result name="success">/behind/ok.jsp</result>
-		</action>
+<package name="struts2" extends="struts-default"  namespace="/">
+	<interceptors>
+		<interceptor name="LoginInter" class="com.wuyibin.shop.interceptor.LoginInter"></interceptor>
+	</interceptors>
+	<global-results> 
+		<result name="login">/account.jsp</result>
+	</global-results>
+	<action name="UserAction" class="useraction">
+		<result name="success">/ok.jsp</result>
+		<result name="login">/index.jsp</result>
+		<result name="loginfailed">/loginfailed.jsp</result>
+	</action>
+	<action name="OrderAction"  class="orderaction">
+		<result name="addorder">/ok.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
 	
+	<action name="GoodAction" class="goodaction">
+		<result name="gooddetail">/product.jsp</result>
+		<!--<result name="addgood">/ok.jsp</result>  -->
+		<result name="deletegood">/cart.jsp</result>
+		<result name="searchgood">/category.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
+	<action name="GoodAction1" class="goodaction">
+		<result name="gooddetail">/product.jsp</result>
+		<result name="addgood">/ok.jsp</result>
+		<result name="deletegood">/cart.jsp</result>
+		<result name="searchgood">/category.jsp</result>
+
+	</action>
 	
-	</package>
+	<action name="ShoppingCarAction" class="shoppingcaraction">
+		<result name="getgoods">/cart.jsp</result>
+		<result name="updategood">/cart.jsp</result>
+		<interceptor-ref name="LoginInter"></interceptor-ref>
+		<interceptor-ref name="defaultStack"></interceptor-ref>
+	</action>
+</package>
 </struts>    
